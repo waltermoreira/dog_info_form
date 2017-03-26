@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  kennel_card_form:
+    build: .
+    volumes:
+      - .:/data
+      - ./app:/app
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "1235:80"
+      - "5235:443"
+    network_mode: "bridge"
+    environment:
+      PASSWORD: "4Cats&Dogs"
+      SHEET: "1bfedgkbyRgiZxEqmb9QXQHdu3ZV3BNgPVb327ku4e2Y"
+      GOOGLE_CREDENTIALS: "/data/secret.json"

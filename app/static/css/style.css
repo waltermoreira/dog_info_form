@@ -1,0 +1,37 @@
+.collection a.collection-item {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom-width: 0px;
+}
+label.low {
+    color: black;
+    height: 20px;
+    line-height: 20px;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.ms-container .ms-list {
+    min-height: 40vh;
+}
+
+label {
+    color: black;
+}
+
+.input-field label {
+    color: black;
+    /* font-weight: bold; */
+}
+
+[type="checkbox"]+label {
+    top: 2px;
+}
