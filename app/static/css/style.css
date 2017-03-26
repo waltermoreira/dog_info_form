@@ -35,3 +35,8 @@ label {
 [type="checkbox"]+label {
     top: 2px;
 }
+
+ul.tight li.collection-item {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}

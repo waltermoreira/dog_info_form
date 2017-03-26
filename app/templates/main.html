@@ -35,127 +35,150 @@
         <div class="row">
           <div class="col s12">
             <div class="section">
-              <h5>
-                Hi there, Volunteer!
-              </h5>
-              <form class="col s12" id="the_form">
-                <div class="row">
-                  <div class="input-field col s12 m6 offset-m3">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="person" type="text" class="validate">
-                    <label for="person" class="truncate"><b>Your name</b> (required)</label>
-                  </div>
-                  <div class="input-field col s12 m6 offset-m3">
-                    <i class="fa fa-paw fa-2x prefix" style="vertical-align:middle"></i>
-                    <input id="name" type="text" class="validate">
-                    <label for="name" class="truncate"><b>Dog</b> (required)</label>
-                  </div>
-                  <div class="input-field col s12 m6 offset-m3">
-                    <i class="fa fa-commenting fa-2x prefix" style="vertical-align:middle"></i>
-                    <textarea id="unique" class="materialize-textarea"></textarea>
-                    <label for="unique">Something unique about the pup...</label>
-                  </div>
-                  <div class="col s12 m6 offset-m3">
-                    <p>
-                      Activities the pup can do:
-                    </p>
-                    <div class="collection" id="interests">
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="car" />
-                        <label for="car" class="wide">
-                          Go for car rides
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="cats" />
-                        <label for="cats" class="wide">
-                          Hang out with cats
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="couch" />
-                        <label for="couch" class="wide">
-                          Be a couch potato
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="tricks" />
-                        <label for="tricks" class="wide">
-                          Do tricks
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="dogs" />
-                        <label for="dogs" class="wide">
-                          Play with other dogs
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="entertain" />
-                        <label for="entertain" class="wide">
-                          Entertain myself
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="fetch" />
-                        <label for="fetch" class="wide">
-                          Play fetch
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="alone" />
-                        <label for="alone" class="wide">
-                          Stay home alone
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="safe" />
-                        <label for="safe" class="wide">
-                          Keep you safe
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="kids" />
-                        <label for="kids" class="wide">
-                          Hang out with kids
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="town" />
-                        <label for="town" class="wide">
-                          Go out on the town
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="runs" />
-                        <label for="runs" class="wide">
-                          Go for runs
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="swim" />
-                        <label for="swim" class="wide">
-                          Go swimming
-                        </label>
-                      </a>
-                      <a href="#!" class="collection-item">
-                        <input type="checkbox" class="filled-in" id="outfits" />
-                        <label for="outfits" class="wide">
-                          Wear outfits
-                        </label>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="col s12 m6 offset-m3" >
-                    <p class="right-align">
-                    <button id="form-submit" class="btn waves-effect waves-light btn-large
-                                                  wide disabled"
-                            type="submit" name="action">Submit
-                      <i class="material-icons right">send</i>
-                    </button>
-                    </p>
-                  </div>
+              <div class="col s12 m4 push-m8">
+                <div class="container">
+                  <h5>Current dogs:</h5>
+                  <ul class="collection tight">
+                    <li class="collection-item teal white-text">Alvin</li>
+                    <li class="collection-item">Alvin</li>
+                    <li class="collection-item">Alvin</li>
+                    <li class="collection-item">Alvin</li>
+                  </ul>
                 </div>
+              </div>
+              <form class="col s12 m6 offset-m2 pull-m4" id="the_form">
+                <h4>
+                  Hi there, Volunteer!
+                </h4>
+                <p>
+                  Please, help the Matchmaker Team by filling information for the kennel card of dogs you know.
+                </p>
+                <ul class="browser-default" >
+                  <li>
+                    Multiple submissions are encouraged. Matchmakers
+                    collect them and review them all before printing.
+                  </li>
+                  <li>
+                    Dogs with <span class="teal white-text">&nbsp;green&nbsp;</span> background
+                    already have some information, but you are <b>welcome</b> to
+                    submit more. Different people may have different insights about a pup.
+                  </li>
+                  <li>
+                    Dogs who have been reviewed and printed by the
+                    matchmakers dissapear from this list.
+                  </li>
+                </ul>
+                <div class="input-field">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input id="person" type="text" class="validate">
+                  <label for="person" class="truncate"><b>Your name</b> (required)</label>
+                </div>
+                <div class="input-field">
+                  <i class="fa fa-paw fa-2x prefix" style="vertical-align:middle"></i>
+                  <input id="name" type="text" class="validate">
+                  <label for="name" class="truncate"><b>Dog</b> (required)</label>
+                </div>
+                <div class="input-field">
+                  <i class="fa fa-commenting fa-2x prefix" style="vertical-align:middle"></i>
+                  <textarea id="unique" class="materialize-textarea"></textarea>
+                  <label for="unique">Something unique about the pup...</label>
+                </div>
+                <p>
+                  Activities the pup can do:
+                </p>
+                <div class="collection" id="interests">
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="car" />
+                    <label for="car" class="wide">
+                      Go for car rides
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="cats" />
+                    <label for="cats" class="wide">
+                      Hang out with cats
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="couch" />
+                    <label for="couch" class="wide">
+                      Be a couch potato
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="tricks" />
+                    <label for="tricks" class="wide">
+                      Do tricks
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="dogs" />
+                    <label for="dogs" class="wide">
+                      Play with other dogs
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="entertain" />
+                    <label for="entertain" class="wide">
+                      Entertain myself
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="fetch" />
+                    <label for="fetch" class="wide">
+                      Play fetch
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="alone" />
+                    <label for="alone" class="wide">
+                      Stay home alone
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="safe" />
+                    <label for="safe" class="wide">
+                      Keep you safe
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="kids" />
+                    <label for="kids" class="wide">
+                      Hang out with kids
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="town" />
+                    <label for="town" class="wide">
+                      Go out on the town
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="runs" />
+                    <label for="runs" class="wide">
+                      Go for runs
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="swim" />
+                    <label for="swim" class="wide">
+                      Go swimming
+                    </label>
+                  </a>
+                  <a href="#!" class="collection-item">
+                    <input type="checkbox" class="filled-in" id="outfits" />
+                    <label for="outfits" class="wide">
+                      Wear outfits
+                    </label>
+                  </a>
+                </div>
+                <p class="right-align">
+                  <button id="form-submit" class="btn waves-effect waves-light btn-large
+                                                  wide disabled"
+                          type="submit" name="action">Submit
+                    <i class="material-icons right">send</i>
+                  </button>
+                </p>
               </form>
             </div>
           </div>
