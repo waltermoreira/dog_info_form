@@ -13,6 +13,7 @@ from flask_socketio import SocketIO, send, emit
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
+import pygsheets
 
 
 def get_env_vars(*names):
@@ -40,20 +41,44 @@ app.config.update(
 socketio = SocketIO(app, logger=True, engineio_logger=True)
 
 
-def cards_read():
-    line = cards.readline()
-    print(f'cards_read: {line}')
-    return json.loads(line)
+def get_sheet(sheet_id):
+    c = pygsheets.authorize(service_file=GOOGLE_CREDENTIALS)
+    sheet = c.open_by_key(sheet_id)
+    return sheet.worksheet_by_title('Sheet1')
 
-def cards_write(data):
-    cards.write(json.dumps(data) + '\n')
-    cards.flush()
 
+class Sheet(object):
+
+    def __init__(self, sheet=SHEET):
+        self.worksheet = get_sheet(sheet)
+        self.columns = self.worksheet.row(1)
+        self.refresh()
+
+    def refresh(self):
+        self.rows = self.worksheet.get_all_records()
+        self.rows_list = self.worksheet.all_values()[1:]
+
+    def has_info(self, row):
+        return any(bool(row.get(col, ''))
+                   for col in self.columns[5:])
+
+    def get_dogs(self):
+        for row in self.rows:
+            if row['Reviewed by'] == '':
+                yield (row['Dog'], self.has_info(row))
+
+
+sheet = Sheet()
 
 @app.route('/')
 def main():
-    return render_template(
-        'main.html')
+    sheet.refresh()
+    dogs = sorted(list(sheet.get_dogs()))
+    return render_template('main.html', dogs=dogs)
+
+@socketio.on('submit', namespace='/apa')
+def submit(message):
+    print(message, file=sys.stderr)
 
 @socketio.on('connect', namespace='/apa')
 def ws_conn():
@@ -63,53 +88,9 @@ def ws_conn():
 def ws_disconn():
     print('Disconnected {}'.format(request.sid))
 
-@socketio.on('refresh_dogs', namespace='/apa')
-def refresh_dogs():
-    def _bg(room):
-        cards_write({'tag': 'refresh'})
-        result = cards_read()
-        cards_write({'tag': 'all_dogs_names'})
-        result = cards_read()
-        socketio.emit('dogs', {'names': result['all_dogs_names']},
-                      namespace='/apa', room=room)
-    eventlet.spawn(_bg, request.sid)
-
-@socketio.on('check_download', namespace='/apa')
-def check_download(message):
-    def _bg(room):
-        cards_write({'tag': 'refresh'})
-        result = cards_read()
-        print('got message: {}'.format(message))
-        cards_write({
-            'tag': 'generate',
-            'names': message['selected']})
-        result = cards_read()
-        if (result['status'] == 'error'
-               and result['exception'] == 'PictureNotFound'):
-            socketio.emit('picture_not_found',
-                          {'for': result['args']},
-                          namespace='/apa', room=room)
-        elif (result['status'] == 'error'
-              and result['exception'] == 'KeyError'):
-            socketio.emit('dog_not_found',
-                        {'for': result['args']},
-                        namespace='/apa', room=room)
-        elif (result['status'] == 'error'
-              and result['exception'] == 'Exception'):
-            socketio.emit('general_exception',
-                        {'for': result['args']},
-                        namespace='/apa', room=room)
-        else:
-            socketio.emit('do_download', namespace='/apa', room=room)
-
-    eventlet.spawn(_bg, request.sid)
-
 @app.route('/download', methods=['POST'])
 def download():
     return send_from_directory(directory='.', filename='out.pdf')
-
-class MyForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
 
 
 if __name__ == '__main__':

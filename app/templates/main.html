@@ -39,10 +39,11 @@
                 <div class="container">
                   <h5>Current dogs:</h5>
                   <ul class="collection tight">
-                    <li class="collection-item teal white-text">Alvin</li>
-                    <li class="collection-item">Alvin</li>
-                    <li class="collection-item">Alvin</li>
-                    <li class="collection-item">Alvin</li>
+                    {% for (dog,info) in dogs %}
+                        <li class="collection-item {% if info %}teal white-text{% endif %}">
+                          {{ dog }}
+                        </li>
+                    {% endfor %}
                   </ul>
                 </div>
               </div>
@@ -70,23 +71,23 @@
                 </ul>
                 <div class="input-field">
                   <i class="material-icons prefix">account_circle</i>
-                  <input id="person" type="text" class="validate">
+                  <input id="person" type="text" class="validate mandatory">
                   <label for="person" class="truncate"><b>Your name</b> (required)</label>
                 </div>
                 <div class="input-field">
                   <i class="fa fa-paw fa-2x prefix" style="vertical-align:middle"></i>
-                  <input id="name" type="text" class="validate">
+                  <input id="name" type="text" class="validate mandatory">
                   <label for="name" class="truncate"><b>Dog</b> (required)</label>
                 </div>
                 <div class="input-field">
                   <i class="fa fa-commenting fa-2x prefix" style="vertical-align:middle"></i>
-                  <textarea id="unique" class="materialize-textarea"></textarea>
-                  <label for="unique">Something unique about the pup...</label>
+                  <textarea id="unique" class="materialize-textarea mandatory"></textarea>
+                  <label for="unique"><b>Something unique about the pup...</b> (required)</label>
                 </div>
                 <p>
-                  Activities the pup can do:
+                  <b>Activities the pup can do</b> (required)
                 </p>
-                <div class="collection" id="interests">
+                <div class="collection" id="activities">
                   <a href="#!" class="collection-item">
                     <input type="checkbox" class="filled-in" id="car" />
                     <label for="car" class="wide">
@@ -257,11 +258,48 @@
 
 
     <script type="text/javascript">
-     /* $(document).ready(function () {
-      *   FB.getLoginStatus(function(response) {
-      *     console.log(response);
-      *   });
-      * });*/
+     function all_filled() {
+       var empty = false;
+       $('.mandatory').each(function() {
+         if ($(this).val() == '') {
+           empty = true;
+         }
+       });
+       var options = false;
+       if ($('#activities input:checked ~ label').length > 0) {
+         options = true;
+       };
+       return ((!empty) && options);
+     };
+     
+     function set_button(filled) {
+       if (filled) {
+         $('button').removeClass('disabled').prop('disabled', false);
+       } else {
+         $('button').addClass('disabled').prop('disabled', true);
+       }
+     };
+
+     $(document).ready(function () {
+       var url = "http://" + document.domain + ":" + location.port;
+       var socket = io.connect(url + "/apa", {'path': location.pathname + 'socket.io'});
+
+       $('.mandatory').keyup(function() {
+         set_button(all_filled());
+       });
+       $('#activities').click(function() {
+         set_button(all_filled());
+       });
+
+       $('#form-submit').click(function() {
+         socket.emit('submit', {
+           'person': $('#person').val(),
+           'dog': $('#name').val(),
+           'activities': $('#activities input:checked ~ label').map(function() {return $(this).html().trim();})
+         });
+         return false;
+       });
+     });
     </script>
 
   </body>
