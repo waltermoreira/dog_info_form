@@ -78,7 +78,11 @@ def main():
 
 @socketio.on('submit', namespace='/apa')
 def submit(message):
-    print(message, file=sys.stderr)
+    try:
+        print(message, file=sys.stderr)
+        emit('done', namespace='/apa')
+    except:
+        emit('error', {'foo': 3}, namespace='/apa')
 
 @socketio.on('connect', namespace='/apa')
 def ws_conn():

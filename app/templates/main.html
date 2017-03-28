@@ -189,14 +189,20 @@
 
     <div id="modal1" class="modals modal yellow accent-1">
       <div class="modal-content">
-        <h4>Picture not found</h4>
-        <p>Hey, I couldn't find a picture for <span class="picture-missing"></span>.</p>
-        <p>Make sure to add a picture in the Google folder with name <span class="picture-missing"></span>.jpg
-        (or .png, etc.)
-        </p>
+        <div class="container">
+          <div class="row">
+            <div class="col s4 offset-s4">
+              <img src="static/img/izzy.jpg" alt="" class="circle responsive-img
+                                              center-align">
+            </div>
+          </div>
+          <h4 class="center-align">
+            Izzy says: "Thank you!"
+          </h4>
+        </div>
       </div>
       <div class="modal-footer yellow accent-1">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
+        <a href="#!" id="modal-dismiss" class="modal-action modal-close waves-effect waves-green btn-flat ">Dismiss</a>
       </div>
     </div>
 
@@ -206,18 +212,6 @@
         <p>Hey, I couldn't find the pup <span class="dog-missing"></span>.</p>
         <p>Make sure to hit the refresh button if rows have been added or removed from the spreadsheet.
         </p>
-      </div>
-      <div class="modal-footer yellow accent-1">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
-      </div>
-    </div>
-
-    <div id="modal3" class="modals modal yellow accent-1">
-      <div class="modal-content">
-        <h4>Generic Exception</h4>
-        <p>Please, copy and paste the message below and send it to support.</p>
-        <div id="exception">
-        </div>
       </div>
       <div class="modal-footer yellow accent-1">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
@@ -284,6 +278,12 @@
        var url = "http://" + document.domain + ":" + location.port;
        var socket = io.connect(url + "/apa", {'path': location.pathname + 'socket.io'});
 
+       $('.modals').modal({
+         complete: function() {
+           window.location.href = './';
+         }
+       });
+
        $('.mandatory').keyup(function() {
          set_button(all_filled());
        });
@@ -295,10 +295,15 @@
          socket.emit('submit', {
            'person': $('#person').val(),
            'dog': $('#name').val(),
-           'activities': $('#activities input:checked ~ label').map(function() {return $(this).html().trim();})
+           'activities': $('#activities input:checked ~ label').map(function() {return $(this).html().trim();}).get()
          });
          return false;
        });
+       
+       socket.on('done', function(msg) {
+         $('#modal1').modal('open');
+       });
+
      });
     </script>
 
