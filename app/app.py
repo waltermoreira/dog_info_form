@@ -46,6 +46,40 @@ def get_sheet(sheet_id):
     sheet = c.open_by_key(sheet_id)
     return sheet.worksheet_by_title('Sheet1')
 
+activities = [
+    'Car rides',
+    'Cats',
+    'Couch potato',
+    'Do tricks',
+    'Dogs',
+    'Entertain myself',
+    'Fetch',
+    'Home alone',
+    'Keep you safe',
+    'Kids',
+    'Out on the town',
+    'Run',
+    'Swim',
+    'Wear outfits'
+]
+
+titles = [
+    'Go for car rides',
+    'Hang out with cats',
+    'Be a couch potato',
+    'Do tricks',
+    'Play with other dogs',
+    'Entertain myself',
+    'Play fetch',
+    'Stay home alone',
+    'Keep you safe',
+    'Hang out with kids',
+    'Go out on the town',
+    'Go for runs',
+    'Go swimming',
+    'Wear outfits'
+]
+
 
 class Sheet(object):
 
@@ -67,8 +101,74 @@ class Sheet(object):
             if row['Reviewed by'] == '':
                 yield (row['Dog'], self.has_info(row))
 
+    def find_row(self, dog):
+        for i, row in enumerate(self.rows):
+            idx = i + 2
+            if row['Dog'] == dog:
+                return idx
+        raise DogNotFound(dog)
+
+    def get_note(self, cell):
+        data = self.worksheet.client.service.spreadsheets().get(
+            spreadsheetId=self.worksheet.spreadsheet.id,
+            ranges=cell,
+            fields='sheets(data(rowData(values(note))))').execute()
+        try:
+            return data['sheets'][0]['data'][0]['rowData'][0]['values'][0]['note']
+        except KeyError:
+            return ''
+
+    def set_note(self, row, col, note):
+        requests = [{
+            "repeatCell": {
+                "range": {
+                    "sheetId": self.worksheet.id,
+                    "startRowIndex": row,
+                    "endRowIndex": row+1,
+                    "startColumnIndex": col,
+                    "endColumnIndex": col+1
+                },
+                "cell": {
+                    'note': note
+                },
+                "fields": "note"
+            }
+        }]
+        self.worksheet.client.sh_batch_update(
+            self.worksheet.spreadsheet.id, requests)
+
+    def set_info(self, info):
+        dog = info['dog']
+        row_idx = self.find_row(dog)
+        row = (self.worksheet.row(row_idx) + ['']*20)[:20]
+        if row[0]:
+            row[0] = '*' + row[0]
+        unique = info['unique']
+        person = info['person']
+        row[5] += f'\n--- {person} ---:\n' + unique
+        for i, (activity, title) in enumerate(zip(activities, titles)):
+            # get value from row
+            try:
+                cur = int(row[i+6])
+            except ValueError:
+                cur = 0
+            # get note from row
+            if title in info['activities']:
+                note = self.get_note(chr(71+i) + str(row_idx))
+                note += f'{person}\n'
+                self.set_note(row_idx-1, i+6, note)
+                row[i+6] = cur + 1
+        self.worksheet.update_row(row_idx, row)
+        return row
+        
 
 sheet = Sheet()
+
+class DogNotFound(Exception):
+    pass
+
+def mark(message):
+    sheet.set_info(message)
 
 @app.route('/')
 def main():
@@ -79,10 +179,12 @@ def main():
 @socketio.on('submit', namespace='/apa')
 def submit(message):
     try:
-        print(message, file=sys.stderr)
+        mark(message)
         emit('done', namespace='/apa')
+    except DogNotFound as exc:
+        emit('notfound', {'dog': exc.args[0]}, namespace='/apa')
     except:
-        emit('error', {'foo': 3}, namespace='/apa')
+        emit('error', namespace='/apa')
 
 @socketio.on('connect', namespace='/apa')
 def ws_conn():
