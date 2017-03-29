@@ -208,20 +208,21 @@
 
     <div id="modal2" class="modals modal yellow accent-1">
       <div class="modal-content">
-        <h4>Dog not found</h4>
-        <p>Hey, I couldn't find the pup <span class="dog-missing"></span>.</p>
-        <p>Make sure to hit the refresh button if rows have been added or removed from the spreadsheet.
-        </p>
+        <h4>Error</h4>
+        <p>An error ocurred. Please, notify the Matchmaker Team.</p>
       </div>
       <div class="modal-footer yellow accent-1">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
       </div>
     </div>
 
-    <div class="row" id="info" style="display:none">
-      <div class="col s12 m4 offset-m4">
-        <div class="card-panel yellow accent-1" id="exception" style="display:none">
-        </div>
+    <div id="modal3" class="modals modal yellow accent-1">
+      <div class="modal-content">
+        <h4>Pooch <span id="modal3_dog"></span> not found</h4>
+        <p>Please, make sure you are spelling the name correctly.</p>
+      </div>
+      <div class="modal-footer yellow accent-1">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
       </div>
     </div>
 
@@ -278,9 +279,20 @@
        var url = "http://" + document.domain + ":" + location.port;
        var socket = io.connect(url + "/apa", {'path': location.pathname + 'socket.io'});
 
-       $('.modals').modal({
+       $('#modal1').modal({
          complete: function() {
            window.location.href = './';
+         }
+       });
+
+       $('#modal2').modal({
+         complete: function() {
+           window.location.href = './';
+         }
+       });
+
+       $('#modal3').modal({
+         complete: function() {
          }
        });
 
@@ -295,6 +307,7 @@
          socket.emit('submit', {
            'person': $('#person').val(),
            'dog': $('#name').val(),
+           'unique': $('#unique').val(),
            'activities': $('#activities input:checked ~ label').map(function() {return $(this).html().trim();}).get()
          });
          return false;
@@ -304,6 +317,14 @@
          $('#modal1').modal('open');
        });
 
+       socket.on('error', function(msg) {
+         $('#modal2').modal('open');
+       });
+
+       socket.on('notfound', function(msg) {
+         $('#modal3_dog').text(msg['dog']);
+         $('#modal3').modal('open');
+       });
      });
     </script>
 
