@@ -282,17 +282,20 @@
        $('#modal1').modal({
          complete: function() {
            window.location.href = './';
+           set_button(false);
          }
        });
 
        $('#modal2').modal({
          complete: function() {
            window.location.href = './';
+           set_button(false);
          }
        });
 
        $('#modal3').modal({
          complete: function() {
+           set_button(all_filled());
          }
        });
 
@@ -304,6 +307,7 @@
        });
 
        $('#form-submit').click(function() {
+         set_button(false);
          socket.emit('submit', {
            'person': $('#person').val(),
            'dog': $('#name').val(),
