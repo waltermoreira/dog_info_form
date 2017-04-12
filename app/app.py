@@ -6,6 +6,7 @@ import time
 import os
 import socket
 import json
+import traceback
 
 from flask import Flask, render_template, request, redirect, flash
 from flask import send_from_directory
@@ -167,9 +168,6 @@ sheet = Sheet()
 class DogNotFound(Exception):
     pass
 
-def mark(message):
-    sheet.set_info(message)
-
 @app.route('/')
 def main():
     sheet.refresh()
@@ -179,11 +177,16 @@ def main():
 @socketio.on('submit', namespace='/apa')
 def submit(message):
     try:
-        mark(message)
+        sheet.refresh()
+        print('Sheet refreshed', file=sys.stderr)
+        sheet.set_info(message)
+        print('Marked!', file=sys.stderr)
         emit('done', namespace='/apa')
     except DogNotFound as exc:
+        traceback.print_exc()
         emit('notfound', {'dog': exc.args[0]}, namespace='/apa')
     except:
+        traceback.print_exc()
         emit('error', namespace='/apa')
 
 @socketio.on('connect', namespace='/apa')
