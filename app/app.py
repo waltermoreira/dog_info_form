@@ -187,7 +187,7 @@ def submit(message):
         emit('notfound', {'dog': exc.args[0]}, namespace='/apa')
     except:
         traceback.print_exc()
-        emit('error', namespace='/apa')
+        emit('exception', namespace='/apa')
 
 @socketio.on('connect', namespace='/apa')
 def ws_conn():
